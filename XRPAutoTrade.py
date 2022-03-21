@@ -3,8 +3,8 @@ import pyupbit
 import datetime
 import numpy as np
 
-access = "RIIiGAKxfIMfxyGzmGunXdpxDp1Dmolxrz6IErbx"
-secret = "9ZSwV65ufwl7R7bDTOS63wKCEqZlGOc4BC2wEeK0"
+access = ""
+secret = ""
 
 def get_ror(k=0.5):
     df = pyupbit.get_ohlcv("KRW-XRP")
