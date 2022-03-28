@@ -52,16 +52,6 @@ def get_ma15(ticker):
     ma15 = df['close'].rolling(15).mean().iloc[-1]
     return ma15
 
-def get_balance(ticker):
-
-    balances = upbit.get_balances()
-    for b in balances:
-        if b['currency'] == ticker:
-            if b['balance'] is not None:
-                return float(b['balance'])
-            else:
-                return 0
-    return 0
 
 def get_current_price(ticker):
    
@@ -84,11 +74,11 @@ while True:
             ma15 = get_ma15("KRW-XRP")
             current_price = get_current_price("KRW-XRP")
             if target_price < current_price and ma15 < current_price:
-                krw = get_balance("KRW")
+                krw = upbit.get_balance("KRW")
                 if krw > 5000:
                     upbit.buy_market_order("KRW-XRP", krw*0.9995)
         else:
-            btc = get_balance("XRP")
+            btc = upbit.get_balance("KRW-XRP")
             if btc > 0.00008:
                 upbit.sell_market_order("KRW-XRP", btc*0.9995-228)
         time.sleep(1)
