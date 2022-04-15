@@ -53,27 +53,16 @@ def get_current_price(ticker):
     """현재가 조회"""
     return pyupbit.get_orderbook(ticker=ticker)["orderbook_units"][0]["ask_price"]
 
-def want():
-    want_k=0
-    arry=0
-    for k in np.arange(0.1, 1.0, 0.1):
-        ror = get_ror(k)
-        if ror>arry:
-            arry=ror
-            want_k=k
-
-    return want_k 
-
 listror=[]
 listk=[]
 for k in np.arange(0.1, 1.0, 0.1):
     ror = get_ror(k)
     listror.append(ror)
     listk.append(k)
-    print("%.1f %f" % (k, ror))
 
 maxindex=np.argmax(listror)
 best=round(listk[maxindex],2)
+print(best)
 
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
