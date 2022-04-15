@@ -20,17 +20,6 @@ def get_ror(k=0.5):
     
     return ror
 
-def want():
-    want_k=0
-    arry=0
-    for k in np.arange(0.1, 1.0, 0.1):
-        ror = get_ror(k)
-        if ror>arry:
-            arry=ror
-            want_k=k
-
-    return want_k 
-
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
     df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
@@ -75,6 +64,17 @@ def want():
 
     return want_k 
 
+listror=[]
+listk=[]
+for k in np.arange(0.1, 1.0, 0.1):
+    ror = get_ror(k)
+    listror.append(ror)
+    listk.append(k)
+    print("%.1f %f" % (k, ror))
+
+maxindex=np.argmax(listror)
+best=round(listk[maxindex],2)
+
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
@@ -87,8 +87,7 @@ while True:
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            want_a=want()
-            target_price = get_target_price("KRW-XRP", want_a)
+            target_price = get_target_price("KRW-XRP", best)
             ma15 = get_ma15("KRW-BTC")
             current_price = get_current_price("KRW-XRP")
             if target_price < current_price and ma15 < current_price:
