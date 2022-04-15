@@ -1,9 +1,35 @@
+import numpy as np
 import time
 import pyupbit
 import datetime
 
 access = "your-access"
 secret = "your-secret"
+
+def get_ror(k=0.5):
+    df = pyupbit.get_ohlcv("KRW-XRP")
+    df['range'] = (df['high'] - df['low']) * k
+    df['target'] = df['open'] + df['range'].shift(1)
+
+    fee = 0.0032
+    df['ror'] = np.where(df['high'] > df['target'],
+                         df['close'] / df['target'] - fee,
+                         1)
+
+    ror = df['ror'].cumprod()[-2]
+    
+    return ror
+
+def want():
+    want_k=0
+    arry=0
+    for k in np.arange(0.1, 1.0, 0.1):
+        ror = get_ror(k)
+        if ror>arry:
+            arry=ror
+            want_k=k
+
+    return want_k 
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
@@ -61,8 +87,8 @@ while True:
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            want_k=want()
-            target_price = get_target_price("KRW-XRP", want_k)
+            want_a=want()
+            target_price = get_target_price("KRW-XRP", want_a)
             ma15 = get_ma15("KRW-BTC")
             current_price = get_current_price("KRW-XRP")
             if target_price < current_price and ma15 < current_price:
