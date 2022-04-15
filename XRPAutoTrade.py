@@ -20,7 +20,7 @@ def get_ror(k=0.5):
     
     return ror
 
-def want(i=0):
+def want():
     want_k=0
     arry=0
     for k in np.arange(0.1, 1.0, 0.1):
@@ -70,6 +70,7 @@ while True:
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
+            want_k=want()
             target_price = get_target_price("KRW-XRP", want_a)
             ma15 = get_ma15("KRW-XRP")
             current_price = get_current_price("KRW-XRP")
